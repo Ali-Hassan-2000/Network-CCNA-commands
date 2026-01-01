@@ -1,0 +1,311 @@
+1-Hostname > user mode
+2-Hostname # Privilege mode
+3-Hostname (config) # configuration mode
+4-Hostname (config-IF) # interface mode
+5-Hostname (config-line) # line mode
+
+release from translation errors (cntrl+shift+6)
+////////////////////////////////////////////
+--CMD--
+ipconfig
+nslookup "web name"
+netstat -r (show routing table)
+arp -a (show address resolutaion protocol)
+tracert "ip address" (tracing the packet)
+arp -a (use arp to dispaly all mac addresses)
+////////////////////////////////////////////
+NOTES:
+add "do" in mode 3, 4 commands to do mode 2 commands
+add "no" to remove a command effect
+////////////////////////////////////////////
+
+--MODE COMMANDS--
+1># ? (help)
+1> en (enable to mode 2)
+2# conf t (move to mode 3)
+# exit , cntrl+z (move to previous mode)
+3# line console "interface name" (go directly to interface)
+3# line vty 0 (go to line mode)
+3# no cdp run (disable the protocol)
+3# cdp run (enable cdp if disabled)
+4# describtion (add describtion to the interface)
+3# banner motd #"message"# (message displayed when start the device)
+2# clock set "time" "date" (change the device time and date. Ex "20:38:00" "nov 15 2025")
+
+--PING COMMANDS--
+1> , 2# ping "text" (ip address or domain name)
+3# tracer "ip address" (tracing the packet)
+3# traceroute "ip address" (tracing the packet)
+
+--SHOW COMMANDS--
+2# show run (show information's of the device)
+2# show cdp neighbor detail (show neighbor protocol)
+2# show ip interface (display all interfaces)
+2# show ip interface brief (display all interfaces in table)
+2# show ipv6 interface brief (display all interfaces in table)
+2# show ip ospf interface (infromation)
+2# show etherchannel summary (information)
+2# show access-lists (ACL information)
+2# show ip arp (show address resolutaion protocol)
+2# show ipv6 route (information)
+2# show ip interface "interface" (display ipv4 interface)
+2# show ip interfaces (display all ipv4 interfaces)
+2# show ipv6 interfaces (display all ipv6 interfaces)
+2# show arp (use arp to dispaly all mac addresses)
+2# show mac address-table (display all mac addresses)
+2# show port-security (display security on switch ports)
+2# show ip nat translation (display the NAT table)
+2# show clock details (show time and date)
+
+--CONFIGURE IP ADDRESS TO INTERFACE--
+3# interface "interface name" (move to interface mode)
+3# interface range "interface name"-"the numbers after" (from to interfaces)
+4# ip address "ip address" (add ip address to the interface)
+4# ipv6 address "ipv6 address/mask" (add ip v6 to the interface "GUA" GLOBAL UNICAST ADDRESS)
+4# ipv6 address "ipv6 address" link local (add ip v6 to the interface "LLA" LINK LOCAL ADDRESS)
+3# ip default-gateway "ip address" (configure the default gateway for the switch)
+
+--SAVE AND RESTART--
+2# show startup-config (information)
+2# show running-config (information)
+2# copy run start (save the device from running to startup)
+2# reload (restart the device)
+2# copy running-config startup-config (save the device)
+2# copy startup-config running-config (unsave the device)
+2# write (save without asking)
+
+--SECURITY--
+3# service password-encryption (encrypted normal password)
+3# security passwords min-length "number" (minimum password lenght)
+3# enable password "password" (add password)
+3# enable secret "password" (add password 'encrypted')
+4# exec-timeout "time" (time before lock automatically)
+4# crypto key generate rsa general-keys modulus "bits" (the size of the key and can be configured from 360 bits to 2048 bits.The minimum recommended modulus length is 1024 bits.)
+4# switchport port-security (Port security on switch in interface)
+
+--CONSOLE MODE--
+3# line console 0 (enter line mode)
+3# line password "password" (set a pass word to console)
+3# line login
+
+--VLAN--
+NOTE: Configure IP Address Settings on a Switch
+3# interface vlan "vlan number" (1 is default number)
+4# ip address "ip address" "mask"
+4# no shut
+4# exit
+NOTE:Vlan commands
+2# show vlan brief (show vlan table in switch)
+3# vlan "vlan number" (1 is default)
+vlan# name "vlan name" (add a name to vlan)
+vlan# exit
+NOTE: now assign interfaces to the vlan
+3# interface "interface name" (move to interface mode)
+4# switchport mode access
+4# switchport "access or voice" vlan "vlan number" (enter the vlan)
+
+NOTE: Vlan called "access ports (for end devices) and we have "trunk ports" 
+(to communicate the switch with one another or with a router)
+--TRUNK--
+3# interface "interface name" (use the managing switch)
+4# switchport mode trunk
+4# switchport trunk allowed vlan "vlan numbers" (num, num, num "add all the vlans from the first switch to the managing switch")
+
+--TELNET--
+3# line vty 0 15 (0 to 15 '16 persons')
+3# password, secret "password" (add password to telnet)
+3# login
+NOTE: device must has valid IP address
+on CMD to inter telnet
+C:\> Telnet "IP address" (enter telnet mode)
+
+--SSH--
+3# hostname "name" (you need to change the name to use SSH)
+3# ip domain -name "webname" (you need to add a web)
+3# crypto key generate rsa general-keys modulus 1024
+3# unsername "name" "password" 
+3# line vty 0 15
+3# transport input ssh
+3# password "password"
+3# login
+NOTE: device must has valid IP address
+on CMD to inter ssh
+C:\> ssh -l "name" "IP address"
+
+--ROUTING PROTOCOL--
+NOTE: we have two types (Dynamic, Static)
+
+Static
+3# ip route "unknown network ID" "subnet mask" "exiting interface ID"
+3# do show ip route (information)
+NOTES:
+"apply Default route only on the edges of network"
+3# ip route 0.0.0.0 0.0.0.0 "exiting interface ID" (Default route)
+3# ip route "unknown network ID" "subnet mask" "exiting interface ID" "AD" (floating route, AD from 1 to 255)
+3# ip route 0.0.0.0 0.0.0.0 "exiting interface ID" "AD" ( default floating route, AD from 1 to 255)
+
+Dynamic:
+(OSPF, EIJRP)
+--OSPF--
+NOTE: First way
+3# route ospf "process ID" (from 1 to 65535)
+4# router-id "ID" (any ID in form of ipv4 (1.1.1.1))
+4# network "network ID" "wild card" area "area number" (wild card= 255.255.255.255 - mask and area start from 0)
+4# do show run (to check)
+NOTE: Second way
+3# router ospf "process ID" (from 1 to 65535)
+4# router-id "ID" (any ID in form of ipv4 (1.1.1.1))
+4# exit
+3# interface "interface"
+4# ip ospf "process ID" area "area number" (process ID mentioned before)
+4# do show run (to check)
+NOTE: make router a DR
+4# ip ospf priority 255 (make the router DR (this command must done to all interfaces))
+NOTE: in OSPF all areas must connect to area "0" backbone
+--EIGRP--
+NOTE: cisco protocol (only cisco devices) 
+3# router eigrp "number" (area number ID)
+4# network "netweok ID" "wild card" (wild card= 255.255.255.255 - mask / network is connected directly only)
+4# do show run (to check)
+
+
+--SWITCHING--
+NOTE: connect 2 switches with 2 links for bandwidth (we use LACP for cisco devices and PAGP for other devices)
+Link Aggregation Control Protocol (LACP): Active, Passive OR Active, Active
+Pipeline Assessment Certification Program (PACP): Auto, Des OR Auto, Auto 
+--LACP&PACP--
+(same commands for both)
+3# interface range "First interface"-"to the last interface number only" (choose more than one interface)
+NOTE: we can use (- or ,) in range command
+4# channel-group "number" mode "active or passive" (number for groups from 1 to 48)
+4# inter port-channel "group number"
+NOTE: mode trunk is needed
+4# switchport trunk encapsulation dot1q
+4# switchport trunk allowed vlan "vlan numbers" (num, num, num)
+
+NOTE:CDP (cisco devices), LLDP (other devices) for switches 
+--CDP--
+2# show cdp neighbors (information)
+3# cdp run (enable cdp)
+4# cdp enable (in interface mode)
+NOTE: in interface mode we can cast the same command (the last one) that is equivalente to the second one
+--LLDP--
+3# lldp run (enable ldp)
+4# lldp transmit (in interface mode)
+4# lldp receive (in interface mode)
+NOTE: in interface mode must add the last 2 commands that is equivalente to the first one 
+4# do show lldp
+
+--ACL--
+NOTE: access control list. two types (Standard and Extended)
+Standard "(1 to 99) and used in near the source device", and Extended "(100 to 199) used in near to destination device"
+commands done in routers.
+
+--DENY--STANDARD--
+NOTE: we use this command near the sender host router
+3# access-list "number" "statue" "condition" "host address to be blocked" (number from 1 to 199 "standard or extended",statue "deny or permit or remark", condition "A.B.C.D or any or host")
+NOTE: in our case we want deny an address so:
+3# access-list 1 deny host "host address to be blocked"
+
+NOTE: deny command always comes before permit
+3# access-list "number" "statue" "condition" (permit command "number same as deny, statue is permit and condition is any")
+NOTE: we do the example in our case
+3# access-list 1 permit any
+
+NOTE: now we use the default gateway of the router to block command
+3# interface "interface name" (default gateway)
+4# ip access-group "number" in (same group number in previous)
+
+NOTE: to check the acl use the following command
+4# do show access-lists (information)
+
+--DENY--EXTENDED--
+NOTE: we use this command near the destination host router
+3# access-list "number" "statue" "statue of what" "condition1" "host address to be blocked (sender)" "condition1" "host address to be blocked (receiver)" (number from 100 to 199 "extended", statue "deny or permit or remark", statue of what "we use here tcp", condition "A.B.C.D or any or host")
+NOTE: in our case we want deny an address so:
+3# access-list 100 deny tcp host "sender ID" host "receiver ID"
+//
+	NOTE: now the permit command 
+	3# access-list "number" "statue" "condition" " " " " (permit command "number same as deny, statue is permit and condition is any")
+	NOTE: we do the example in our case
+	3# access-list 100 permit ahp any any
+//
+NOTE: now we use the default gateway of the router to block command "defualt gateway here is the gateway of the destination device not the sender"
+3# interface "interface name" (default gateway)
+4# ip access-group "number" out (same group number in previous)
+
+NOTE: to check the acl use the following command
+4# do show access-lists (information)
+
+--SPEED--
+NOTE: controll the speed of the interfaces of the switch
+4# duplex full
+4# speed "number in Mpbs" (eathier 10, 100 or 1000. fiber cable always full duplex on 1000)
+
+--DHCP--
+NOTE: dhcpv4 configuration on a router
+3# ip dhcp excluded-address "ip or ip ip" (add the ip addresses that are predefined "ip ip" from to ip's)
+3# ip dhcp pool "pool name" (define a pool frist to add the rest addresses "default gateway, dns or domain-name")
+4# network "ip address" "mask" (address pool)
+4# default-router "ip address" (default router or gateway)
+4# dns-server "ip address" (add dns server ip)
+4# domain-name "web name" (add name)
+NOTE: configure address using dhcp for a end device
+3# interface "interface"
+4# ip address dhcp
+4# no shut
+
+--NAT--
+NOTE:THERE IS STATIC AND DYNAMIC (static for every private ip there is public ip sorted in table)
+(dynamic "first come first serve" for every private ip to public ip)
+NOTE: there is also PAN (port address translation) which uses the same ip but defferint port number
+--STATIC--
+NOTE: create a map between inside local and inside global
+3# ip nat inside source "private ip" "publice ip"
+3# interface "interface" (use the inside interface of the router private network)
+4# ip address "ip address" "mask" (use the private ip of the inside network of the router)
+4# ip nat inside
+4# exit
+3# interface "interface" (use the outside interface of the router private network)
+4# ip address "ip address" "mask" (use the publice ip of the inside network of the router)
+4# ip nat outside
+NOTE: check
+4# do show ip nat translation
+--DYNAMIC--
+NOTE: 5 steps to configure
+NOTE:define the addresses will be used
+3# ip nat "nat name" "ip 1" "ip2" netmask "ip mask" (nat name "group name", ip1 "starting publice ip", ip2 "end publice ip", mask "mask of the group")
+NOTE: configure standard ACL
+3# access-list "ACL number" permit "private ip" "ip mask" (ACL 1-99 standard)
+3# ip nat inside source list "ACL number" pool "nat name"
+NOTE: now assign the interfaces same sa STATIC
+3# interface "interface" (use the inside interface of the router private network)
+4# ip nat inside
+4# interface "interface" (use the outside interface of the router private network)
+4# ip nat outside
+NOTE: now check
+4# do show ip nat translation
+
+--PAT--
+NOTE: to configure we use the same method in dynamic nat (ACL) group
+3# ip nat "nat name" "ip 1" "ip2" netmask "ip mask"
+3# access-list "ACL number" permit "private ip" "ip mask"
+NOTE: now we use OVERLOAD the ip
+3# ip nat inside source list "ACL number" pool "nat name" overload
+NOTE: now assign the interfaces same sa DYNAMIC
+3# interface "interface" (use the inside interface of the router private network)
+4# ip nat inside
+4# interface "interface" (use the outside interface of the router private network)
+4# ip nat outside
+NOTE: now check
+4# do show ip nat translation
+
+--NTP--
+NOTE: network time protocol for devices
+first we check the time
+2# show clock details (show time and date)
+3# ntp server "server ip" (change the ntp to the same server ntp)
+3# do show clock details (now we can see the change)
+
+
+
