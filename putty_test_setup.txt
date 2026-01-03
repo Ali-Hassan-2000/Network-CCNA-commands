@@ -1,0 +1,9 @@
+NOTE: linux commands to use test enviroment terminal with putty
+
+~ sudo apt install openssh-server (install localhost ssh)
+~ sudo systemctl start ssh
+~ sudo systemctl enable ssh (enable connection)
+
+~ sudo systemctl status ssh (check status)
+
+~ ssh localhost (connect to ssh) (the hostname or ip 'localhost (127.0.0.1)')
